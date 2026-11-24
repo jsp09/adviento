@@ -165,6 +165,7 @@ const guardarAbiertos = () => { if (!sb || esAdmin) localStorage.setItem(claveAb
 /* ================== CALENDARIO ================== */
 function render() {
   const c = cfg();
+  document.documentElement.dataset.tema = temaActual();
   $('#titulo').textContent = c.titulo;
   $('#subtitulo').textContent = c.subtitulo || '';
   document.title = c.titulo;
@@ -223,6 +224,29 @@ $('#calendario').addEventListener('click', e => {
   else if (r?.activo && r.fecha) toast(`Paciencia: se abre el ${fmtFecha(r.fecha)}`);
   else toast('Este regalo todavía no está listo 😉');
 });
+
+/* ================== DISEÑO (lo puede elegir ella) ================== */
+const TEMAS = [
+  ['clasico', 'Noche de adviento', ['#0e1b28', '#d9a441', '#a8281f']],
+  ['bombon', 'Bombón', ['#761552', '#e6c47e', '#f3a6c7']],
+  ['regalo', 'Papel de regalo', ['#bf9467', '#a3241c', '#2f5d43']],
+  ['lebkuchen', 'Lebkuchen', ['#15241b', '#b8743c', '#f2bd4d']],
+];
+const LS_TEMA = 'adviento:tema';
+const temaActual = () => localStorage.getItem(LS_TEMA) || cfg().tema || 'clasico';
+$('#btnTema').onclick = () => {
+  modal(`<h3>Elige el diseño</h3>
+    <div class="temas">${TEMAS.map(([k, nombre, cols]) => `<button class="tema-op ${k === temaActual() ? 'sel' : ''}" data-tema-op="${k}">
+      <span class="muestras">${cols.map(c => `<i style="background:${c}"></i>`).join('')}</span>${nombre}</button>`).join('')}</div>`);
+  $('.temas').onclick = e => {
+    const b = e.target.closest('[data-tema-op]');
+    if (!b) return;
+    localStorage.setItem(LS_TEMA, b.dataset.temaOp);
+    document.documentElement.dataset.tema = b.dataset.temaOp;
+    registrar('tema', `Diseño: ${b.textContent.trim()}`, null);
+    cerrarModal();
+  };
+};
 
 /* ================== MODAL / AVISOS ================== */
 function modal(html) { $('#modalContenido').innerHTML = html; $('#modal').hidden = false; }
@@ -687,6 +711,7 @@ function abrirAdmin() {
   $('#cfgTotal').value = total();
   $('#cfgCumple').value = cfg().cumple || '';
   $('#cfgSpoilers').checked = !!cfg().spoilers;
+  $('#cfgTema').value = cfg().tema || 'clasico';
   $('#cfgFecha').value = sessionStorage.getItem(LS.fechaSim) || '';
   const pz = cfg().puzzle || {};
   $('#cfgPuzzleFilas').value = pz.filas || 3;
@@ -701,7 +726,7 @@ function abrirAdmin() {
   nuevoRegalo();
 }
 
-const ICONOS = { abierto: '🎁', fase: '✨', inicio: '👀', reto_ok: '✅', fallo: '❌', tiempo: '⏰', intento: '🔤' };
+const ICONOS = { tema: '🎨', abierto: '🎁', fase: '✨', inicio: '👀', reto_ok: '✅', fallo: '❌', tiempo: '⏰', intento: '🔤' };
 async function renderActividad() {
   const ul = $('#actividad');
   ul.innerHTML = '<li><small>Cargando…</small></li>';
@@ -729,6 +754,7 @@ $('#cfgTitulo').oninput = e => { cfg().titulo = e.target.value; guardarAjustes()
 $('#cfgSubtitulo').oninput = e => { cfg().subtitulo = e.target.value; guardarAjustes(); };
 $('#cfgTotal').onchange = e => { cfg().total = Math.min(Math.max(+e.target.value || 24, 1), 60); guardarAjustes(); opcionesNumero(); };
 $('#cfgCumple').onchange = e => { cfg().cumple = e.target.value; guardarAjustes(); };
+$('#cfgTema').onchange = e => { cfg().tema = e.target.value; localStorage.removeItem(LS_TEMA); document.documentElement.dataset.tema = e.target.value; guardarAjustes(); };
 $('#cfgSpoilers').onchange = e => { cfg().spoilers = e.target.checked; guardarAjustes(); };
 $('#cfgFecha').onchange = e => {
   e.target.value ? sessionStorage.setItem(LS.fechaSim, e.target.value) : sessionStorage.removeItem(LS.fechaSim);

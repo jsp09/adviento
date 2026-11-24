@@ -6,7 +6,7 @@
   <title>Calendario de Adviento</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@1,700&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Grenze+Gotisch:wght@700&family=Inter:wght@400;500;600&family=Young+Serif&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -19,6 +19,7 @@
     <button id="btnExpediente" class="btn sec mini expediente" hidden></button>
     <p id="avisoSim" class="aviso" hidden></p>
     <button id="btnAdmin" class="btn sec mini">Admin</button>
+    <button id="btnTema" class="btn sec mini" aria-label="Cambiar diseño">🎨 Diseño</button>
   </header>
 
   <main id="calendario" class="grid"></main>
@@ -50,6 +51,14 @@
           <label class="crece">Número de casillas <input type="number" id="cfgTotal" min="1" max="60"></label>
           <label class="crece">Fecha del gran día (última casilla) <input type="date" id="cfgCumple"></label>
         </div>
+        <label>Diseño por defecto (ella puede cambiarlo con el botón 🎨)
+          <select id="cfgTema">
+            <option value="clasico">Noche de adviento (azul y dorado)</option>
+            <option value="bombon">Bombón (caja Lindt)</option>
+            <option value="regalo">Papel de regalo</option>
+            <option value="lebkuchen">Lebkuchen (Múnich)</option>
+          </select>
+        </label>
         <label class="check"><input type="checkbox" id="cfgSpoilers"> Mostrar nombre y foto antes de desbloquear</label>
         <fieldset class="reto">
           <label>Foto del puzzle del expediente <input type="file" id="cfgPuzzleFile" accept="image/*"></label>

@@ -347,3 +347,176 @@ textarea.mono { font-family: ui-monospace, Menlo, Consolas, monospace; letter-sp
 }
 .lista { grid-template-columns: minmax(0, 1fr); }
 .lista li { min-width: 0; }
+
+
+/* =================== DISEÑOS =================== */
+:root { --f-titulo: 'Fraunces', Georgia, serif; }
+.top h1, .puerta .num, .modal-box h3, .regalo h2, .fase-box .grande, .q-reloj { font-family: var(--f-titulo); }
+
+/* ---------- Bombón (caja Lindt) ---------- */
+[data-tema="bombon"] {
+  --f-titulo: 'Bodoni Moda', 'Didot', Georgia, serif;
+  --bg: #4f0d35; --bg2: #3d0a29; --campo: #2c071e; --borde: #7c2a5a;
+  --papel: #fff3f7; --tinta: #3a0f25; --rojo: #b0175a; --oro: #e6c47e; --verde: #7a3b2a; --gris: #e4a9c8;
+}
+[data-tema="bombon"] body { background: radial-gradient(900px 600px at 50% 0%, #a3226b 0%, #6e1249 45%, #4f0d35 100%) fixed #4f0d35; }
+[data-tema="bombon"] .top h1 { font-style: italic; font-weight: 700; color: #f3d99c; letter-spacing: 0; text-shadow: 0 1px 0 #8a5a12, 0 0 24px rgba(243,217,156,.35); }
+[data-tema="bombon"] .grid {
+  max-width: 980px; margin: 0 auto 60px; padding: 18px; gap: 14px;
+  background: #761552; border-radius: 22px;
+  box-shadow: inset 0 0 0 2px #e6c47e, inset 0 0 0 7px #761552, inset 0 0 0 8px rgba(230,196,126,.55), 0 30px 60px -30px rgba(0,0,0,.7);
+}
+[data-tema="bombon"] .puerta { border-radius: 26px; box-shadow: none; outline: none; }
+[data-tema="bombon"] .puerta .num { font-style: italic; }
+[data-tema="bombon"] .puerta.vacio { background: #5e0f41; box-shadow: inset 0 6px 14px rgba(0,0,0,.45), inset 0 -2px 0 rgba(255,255,255,.06); color: #a8577f; }
+[data-tema="bombon"] .puerta.bloqueado { background: radial-gradient(circle at 35% 28%, #7a4634 0%, #4a271b 55%, #2f170f 100%); color: #e6c47e; box-shadow: 0 6px 12px -4px rgba(0,0,0,.6), inset 0 2px 0 rgba(255,255,255,.12); }
+[data-tema="bombon"] .puerta.disponible { background: linear-gradient(135deg, #f8e6ae 0%, #c9993f 30%, #f4d98e 52%, #b8862f 78%, #edd08a 100%); color: #4a1d10; box-shadow: 0 0 0 2px #fff3c9, 0 0 30px -4px rgba(248,230,174,.75); }
+[data-tema="bombon"] .puerta.disponible .pie { color: #4a1d10; }
+[data-tema="bombon"] .puerta.abierto { background: linear-gradient(140deg, #ffe0ec 0%, #f3a6c7 45%, #ffd3e4 70%, #e98fb6 100%); color: #5a0f3c; }
+[data-tema="bombon"] .puerta.abierto .icono { color: #6e1249; filter: none; }
+[data-tema="bombon"] .puerta.final { background: radial-gradient(circle at 50% 35%, #8a5136, #3a1d12 75%); color: #f3d99c; outline: 2px solid #e6c47e; outline-offset: -9px; }
+[data-tema="bombon"] .progreso .pbar { background: #3d0a29; }
+[data-tema="bombon"] .progreso .pbar i { background: linear-gradient(90deg, #c9993f, #f8e6ae); }
+[data-tema="bombon"] #subtitulo, [data-tema="bombon"] .progreso { color: #f1c3dc; }
+
+/* ---------- Papel de regalo ---------- */
+[data-tema="regalo"] {
+  --f-titulo: 'Young Serif', Georgia, serif;
+  --bg: #b98d5f; --bg2: #2f3b2c; --campo: #222b20; --borde: #4e5f49;
+  --papel: #fff8ea; --tinta: #3b2414; --rojo: #a3241c; --oro: #e2b44f; --verde: #2f5d43; --gris: #6b4b2e;
+}
+[data-tema="regalo"] body {
+  background-color: #bf9467;
+  background-image: radial-gradient(rgba(255,255,255,.13) 1.2px, transparent 1.5px), radial-gradient(rgba(80,50,20,.10) 1px, transparent 1.4px);
+  background-size: 16px 16px, 23px 23px; background-position: 0 0, 7px 11px; background-attachment: fixed;
+}
+[data-tema="regalo"] #nieve { display: none; }
+[data-tema="regalo"] .top h1 { color: #8d1e17; font-weight: 400; }
+[data-tema="regalo"] #subtitulo, [data-tema="regalo"] .progreso { color: #4a3018; }
+[data-tema="regalo"] #btnAdmin, [data-tema="regalo"] .expediente { color: #4a3018; }
+[data-tema="regalo"] .progreso .pbar { background: rgba(74,48,24,.25); }
+[data-tema="regalo"] .progreso .pbar i { background: #a3241c; }
+[data-tema="regalo"] .puerta { border-radius: 6px; outline: none; box-shadow: 0 8px 14px -8px rgba(60,30,10,.7), 0 2px 0 rgba(0,0,0,.08); }
+[data-tema="regalo"] .puerta .num {
+  background: #fff8ea; color: #8d1e17; font-size: 1.5rem; line-height: 1; padding: 6px 10px 5px;
+  border-radius: 4px 12px 12px 4px; transform: rotate(-6deg); box-shadow: 0 2px 4px rgba(0,0,0,.25);
+}
+[data-tema="regalo"] .puerta .pie { color: #fff8ea; text-shadow: 0 1px 2px rgba(0,0,0,.6); }
+[data-tema="regalo"] .puerta.bloqueado, [data-tema="regalo"] .puerta.disponible { color: #fff8ea; }
+[data-tema="regalo"] .puerta.bloqueado {
+  background:
+    linear-gradient(90deg, transparent 44%, #e2b44f 44%, #f3d27e 50%, #e2b44f 56%, transparent 56%),
+    linear-gradient(transparent 44%, #e2b44f 44%, #f3d27e 50%, #e2b44f 56%, transparent 56%),
+    radial-gradient(#f4e6cf 18%, transparent 20%) 0 0 / 18px 18px, #2f5d43;
+}
+[data-tema="regalo"] .puerta.bloqueado:nth-child(3n+2) {
+  background:
+    linear-gradient(90deg, transparent 44%, #e2b44f 44%, #f3d27e 50%, #e2b44f 56%, transparent 56%),
+    linear-gradient(transparent 44%, #e2b44f 44%, #f3d27e 50%, #e2b44f 56%, transparent 56%),
+    repeating-linear-gradient(45deg, #b8322a 0 9px, #f1e3cc 9px 12px, #b8322a 12px 21px);
+}
+[data-tema="regalo"] .puerta.bloqueado:nth-child(3n) {
+  background:
+    linear-gradient(90deg, transparent 44%, #b8322a 44%, #d4483d 50%, #b8322a 56%, transparent 56%),
+    linear-gradient(transparent 44%, #b8322a 44%, #d4483d 50%, #b8322a 56%, transparent 56%),
+    repeating-linear-gradient(90deg, #f1e3cc 0 10px, #e7d3b2 10px 20px);
+  color: #8d1e17;
+}
+[data-tema="regalo"] .puerta.disponible {
+  background:
+    linear-gradient(90deg, transparent 43%, #fff8ea 43%, #ffffff 50%, #fff8ea 57%, transparent 57%),
+    linear-gradient(transparent 43%, #fff8ea 43%, #ffffff 50%, #fff8ea 57%, transparent 57%),
+    radial-gradient(#e2b44f 22%, transparent 24%) 0 0 / 16px 16px, #a3241c;
+  box-shadow: 0 0 0 3px #fff8ea, 0 12px 24px -8px rgba(90,20,10,.8);
+}
+[data-tema="regalo"] .puerta.disponible .pie { color: #fff8ea; }
+[data-tema="regalo"] .puerta.abierto { background: #fff8ea; color: #8d1e17; box-shadow: 0 0 0 1px rgba(60,30,10,.15), 0 8px 14px -8px rgba(60,30,10,.6); }
+[data-tema="regalo"] .puerta.abierto .pie { color: #6b4b2e; text-shadow: none; }
+[data-tema="regalo"] .puerta.abierto .icono { color: #a3241c; filter: none; }
+[data-tema="regalo"] .puerta.con-foto .num { top: 8px; left: 8px; font-size: 1rem; padding: 4px 7px; }
+[data-tema="regalo"] .puerta.abierto .nombre { color: #3b2414; }
+[data-tema="regalo"] .puerta.vacio { background: rgba(255,248,234,.12); outline: 2px dashed rgba(74,48,24,.35); outline-offset: -6px; box-shadow: none; }
+[data-tema="regalo"] .puerta.vacio .num { background: transparent; box-shadow: none; color: rgba(74,48,24,.55); transform: none; }
+[data-tema="regalo"] .puerta.final:not(.abierto) {
+  background:
+    linear-gradient(90deg, transparent 45%, #a3241c 45%, #c8392e 50%, #a3241c 55%, transparent 55%),
+    linear-gradient(transparent 45%, #a3241c 45%, #c8392e 50%, #a3241c 55%, transparent 55%),
+    linear-gradient(135deg, #f6dd94, #d3a23f 40%, #f2d280 60%, #c4912f);
+  outline: none;
+}
+[data-tema="regalo"] .puerta.final .num { font-size: 2.6rem; }
+[data-tema="regalo"] .puerta.final .mes { color: #3b2414; }
+[data-tema="regalo"] .puerta.final .pie { color: #3b2414; text-shadow: none; }
+[data-tema="regalo"] .puerta.disponible::before { border-radius: 6px; }
+
+/* ---------- Lebkuchen (Múnich) ---------- */
+[data-tema="lebkuchen"] {
+  --f-titulo: 'Grenze Gotisch', 'UnifrakturCook', Georgia, serif;
+  --bg: #15241b; --bg2: #1d3125; --campo: #101b14; --borde: #35503f;
+  --papel: #fff4e3; --tinta: #3a1d0e; --rojo: #b3262c; --oro: #f2bd4d; --verde: #2d5a3e; --gris: #a9bfa9;
+}
+[data-tema="lebkuchen"] body { background: radial-gradient(800px 500px at 50% -5%, #2a4433 0%, #15241b 65%) fixed #15241b; }
+[data-tema="lebkuchen"] .top { padding-top: 70px; }
+[data-tema="lebkuchen"] .top::before {
+  content: ''; position: absolute; left: 0; right: 0; top: 18px; height: 26px; pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 60%, #ffd466 0 4px, rgba(255,212,102,.35) 5px, transparent 9px) 0 0 / 56px 26px repeat-x,
+    radial-gradient(circle at 50% 60%, #ff6b5a 0 4px, rgba(255,107,90,.35) 5px, transparent 9px) 28px 4px / 56px 26px repeat-x;
+  animation: brillo 3s ease-in-out infinite alternate;
+}
+[data-tema="lebkuchen"] .top h1 { color: #f2bd4d; font-weight: 700; letter-spacing: .01em; text-shadow: 0 0 22px rgba(242,189,77,.4); font-size: clamp(2.4rem, 7vw, 4.4rem); }
+[data-tema="lebkuchen"] .puerta {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='xMidYMid meet'%3E%3Cpath d='M50 93C21 72 5 54 5 33 5 17 17 7 31 7c9 0 16 5 19 12 3-7 10-12 19-12 14 0 26 10 26 26 0 21-16 39-45 60z' fill='%237b4222'/%3E%3Cpath d='M50 93C21 72 5 54 5 33 5 17 17 7 31 7c9 0 16 5 19 12 3-7 10-12 19-12 14 0 26 10 26 26 0 21-16 39-45 60z' fill='none' stroke='%23fff3e0' stroke-width='2.6' stroke-dasharray='5 3.5' transform='translate%2850 50%29 scale%28.86%29 translate%28-50 -50%29'/%3E%3C/svg%3E") center / contain no-repeat; box-shadow: none; outline: none; border-radius: 0;
+  color: #fff4e3; justify-content: flex-start; padding-top: 22%;
+  filter: drop-shadow(0 6px 8px rgba(0,0,0,.45));
+}
+[data-tema="lebkuchen"] .puerta:hover { transform: rotate(-4deg); }
+[data-tema="lebkuchen"] .puerta::before { content: none !important; }
+[data-tema="lebkuchen"] .puerta .num { font-size: 2.6rem; line-height: 1; }
+[data-tema="lebkuchen"] .puerta .pie { bottom: 30%; font-size: .66rem; padding: 0 22%; }
+[data-tema="lebkuchen"] .puerta .nombre { display: none; }
+[data-tema="lebkuchen"] .puerta.vacio { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='xMidYMid meet'%3E%3Cpath d='M50 93C21 72 5 54 5 33 5 17 17 7 31 7c9 0 16 5 19 12 3-7 10-12 19-12 14 0 26 10 26 26 0 21-16 39-45 60z' fill='rgba%28255,255,255,.03%29' stroke='%234f6b57' stroke-width='1.6' stroke-dasharray='4 4'/%3E%3C/svg%3E"); color: #4f6b57; filter: none; }
+[data-tema="lebkuchen"] .puerta.disponible { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='xMidYMid meet'%3E%3Cpath d='M50 93C21 72 5 54 5 33 5 17 17 7 31 7c9 0 16 5 19 12 3-7 10-12 19-12 14 0 26 10 26 26 0 21-16 39-45 60z' fill='%23b3262c'/%3E%3Cpath d='M50 93C21 72 5 54 5 33 5 17 17 7 31 7c9 0 16 5 19 12 3-7 10-12 19-12 14 0 26 10 26 26 0 21-16 39-45 60z' fill='none' stroke='%23fff3e0' stroke-width='2.6' stroke-dasharray='5 3.5' transform='translate%2850 50%29 scale%28.86%29 translate%28-50 -50%29'/%3E%3C/svg%3E"); animation: entrar .45s both, latir 1.6s ease-in-out .6s infinite; }
+[data-tema="lebkuchen"] .puerta.disponible .pie { color: #ffd466; }
+[data-tema="lebkuchen"] .puerta.abierto { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='xMidYMid meet'%3E%3Cpath d='M50 93C21 72 5 54 5 33 5 17 17 7 31 7c9 0 16 5 19 12 3-7 10-12 19-12 14 0 26 10 26 26 0 21-16 39-45 60z' fill='%23b8743c'/%3E%3Cpath d='M50 93C21 72 5 54 5 33 5 17 17 7 31 7c9 0 16 5 19 12 3-7 10-12 19-12 14 0 26 10 26 26 0 21-16 39-45 60z' fill='none' stroke='%23fff3e0' stroke-width='2.6' stroke-dasharray='5 3.5' transform='translate%2850 50%29 scale%28.86%29 translate%28-50 -50%29'/%3E%3C/svg%3E"); }
+[data-tema="lebkuchen"] .puerta.con-foto { padding-top: 16%; }
+[data-tema="lebkuchen"] .puerta.con-foto .num { position: static; font-size: 1.3rem; }
+[data-tema="lebkuchen"] .puerta .icono { width: 34%; margin-top: 4px; color: #fff4e3; filter: none; }
+[data-tema="lebkuchen"] .puerta img.mini { width: 34%; margin-top: 4px; border-radius: 50%; }
+[data-tema="lebkuchen"] .puerta.final { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='xMidYMid meet'%3E%3Cpath d='M50 93C21 72 5 54 5 33 5 17 17 7 31 7c9 0 16 5 19 12 3-7 10-12 19-12 14 0 26 10 26 26 0 21-16 39-45 60z' fill='%23c58b2b'/%3E%3Cpath d='M50 93C21 72 5 54 5 33 5 17 17 7 31 7c9 0 16 5 19 12 3-7 10-12 19-12 14 0 26 10 26 26 0 21-16 39-45 60z' fill='none' stroke='%23fff3e0' stroke-width='2.2' stroke-dasharray='6 3' transform='translate%2850 50%29 scale%28.86%29 translate%28-50 -50%29'/%3E%3C/svg%3E"); color: #fff4e3; outline: none; }
+[data-tema="lebkuchen"] .puerta.final .num { font-size: 4.6rem; }
+[data-tema="lebkuchen"] .puerta.final .mes { color: #3a1d0e; opacity: .8; }
+[data-tema="lebkuchen"] .puerta.final .pie { color: #3a1d0e; bottom: 28%; }
+[data-tema="lebkuchen"] .progreso .pbar i { background: linear-gradient(90deg, #b3262c, #f2bd4d); }
+@media (max-width: 560px) {
+  [data-tema="lebkuchen"] .puerta .num { font-size: 1.9rem; }
+  [data-tema="lebkuchen"] .puerta .pie { font-size: .54rem; bottom: 29%; padding: 0 20%; }
+  [data-tema="lebkuchen"] .puerta.final { aspect-ratio: 3 / 2; }
+  [data-tema="lebkuchen"] .puerta.final .num { font-size: 3.2rem; }
+}
+@keyframes brillo { to { opacity: .55; } }
+@keyframes latir { 0%, 100% { transform: scale(1); } 12% { transform: scale(1.07); } 24% { transform: scale(1); } 36% { transform: scale(1.04); } }
+@media (prefers-reduced-motion: reduce) { [data-tema="lebkuchen"] .top::before { animation: none; } }
+[data-tema="lebkuchen"] .progreso .pbar { background: #0f1a13; }
+[data-tema="lebkuchen"] .puerta.con-foto { padding-top: 15%; }
+[data-tema="lebkuchen"] .puerta.con-foto .num { font-size: 1.15rem; }
+[data-tema="lebkuchen"] .puerta .icono { width: 27%; margin-top: 2px; }
+[data-tema="lebkuchen"] .puerta.con-foto .pie { bottom: 25%; }
+@media (max-width: 560px) {
+  [data-tema="lebkuchen"] .puerta.con-foto .num { font-size: .95rem; }
+  [data-tema="lebkuchen"] .puerta.con-foto .pie { font-size: .48rem; bottom: 24%; }
+}
+[data-tema="lebkuchen"] .puerta.con-foto { padding-top: 21%; }
+[data-tema="lebkuchen"] .puerta .icono { width: 24%; }
+[data-tema="lebkuchen"] .puerta.con-foto .pie { padding: 0 25%; }
+[data-tema="regalo"] .puerta.final .mes { display: none; }
+
+/* Selector de diseño */
+#btnTema { position: absolute; top: 16px; left: 16px; }
+.temas { display: grid; gap: 10px; }
+.tema-op { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 12px; border: 2px solid #e2d3b8; background: #fff; color: var(--tinta); font: 600 1rem 'Inter', sans-serif; cursor: pointer; text-align: left; }
+.tema-op.sel { border-color: var(--rojo); }
+.muestras { display: flex; }
+.muestras i { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #fff; margin-left: -6px; box-shadow: 0 1px 3px rgba(0,0,0,.3); }
+.muestras i:first-child { margin-left: 0; }
+[data-tema="lebkuchen"] #btnTema, [data-tema="lebkuchen"] #btnAdmin { top: 52px; }
