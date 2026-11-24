@@ -35,7 +35,10 @@
   <section id="admin" class="admin" hidden>
     <div class="admin-head">
       <h2>Panel de administración</h2>
-      <button id="btnSalirAdmin" class="btn sec">Volver al calendario</button>
+      <div class="row" style="margin:0">
+        <button id="btnSalirSesion" class="btn sec" hidden>Cerrar sesión</button>
+        <button id="btnSalirAdmin" class="btn sec">Volver al calendario</button>
+      </div>
     </div>
 
     <div class="admin-cols">
@@ -69,6 +72,15 @@
         <button id="btnResetAbiertos" class="btn sec">Volver a cerrar todos los regalos (este navegador)</button>
         <button id="btnRecargar" class="btn sec">Descartar cambios y cargar el regalos.json publicado</button>
 
+        <div id="actividadBox" hidden>
+          <div class="lista-head">
+            <h3>Su actividad</h3>
+            <button id="btnActividad" class="btn sec mini">Actualizar</button>
+          </div>
+          <ul id="actividad" class="lista actividad"></ul>
+          <button id="btnBorrarProgreso" class="btn peligro mini" style="margin-top:10px">Borrar su progreso</button>
+        </div>
+
         <div class="lista-head">
           <h3>Regalos</h3>
           <button id="btnNuevo" class="btn mini">+ Nuevo</button>
@@ -89,6 +101,10 @@
         <div class="row">
           <label class="crece">Subir foto <input type="file" id="fotoFile" accept="image/*"></label>
           <label class="crece">o URL de la foto <input name="fotoUrl" placeholder="https://…"></label>
+        </div>
+        <div class="row" style="align-items:center">
+          <label class="crece" style="margin:0">Icono en la casilla <select name="icono"></select></label>
+          <span id="iconoPrev" class="icono-prev"></span>
         </div>
         <div class="foto-prev" id="fotoPrevWrap" hidden>
           <img id="fotoPreview" alt="">
@@ -123,6 +139,7 @@
   </section>
 
   <div id="toast" class="toast" hidden></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="app.js"></script>
 </body>
 </html>

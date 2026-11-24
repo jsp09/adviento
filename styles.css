@@ -306,3 +306,44 @@ textarea.mono { font-family: ui-monospace, Menlo, Consolas, monospace; letter-sp
 .w-kb div { display: flex; gap: 4px; }
 .w-kb button { flex: 1; min-width: 0; height: 46px; border: 0; border-radius: 6px; background: #e4d8c4; color: var(--tinta); font: 600 .9rem 'Inter', sans-serif; cursor: pointer; touch-action: manipulation; padding: 0; }
 .w-kb button.ancha { flex: 1.6; font-size: .68rem; }
+
+/* Casillas con miniatura en lugar de foto a toda la casilla */
+.puerta.con-foto::after { content: none; }
+.puerta.con-foto .num { position: absolute; top: 7px; left: 10px; font-size: 1.15rem; }
+.puerta img.mini {
+  position: relative; inset: auto; z-index: 2;
+  width: 54%; height: auto; aspect-ratio: 1; object-fit: cover;
+  border-radius: 12px; border: 2px solid rgba(255,255,255,.9);
+  box-shadow: 0 5px 14px rgba(0,0,0,.35); margin-top: -10px;
+}
+.puerta.con-foto .nombre { -webkit-line-clamp: 1; margin-top: 6px; }
+.puerta.final img.mini { width: 34%; }
+@media (max-width: 560px) {
+  .puerta.con-foto .num { font-size: .95rem; top: 6px; left: 8px; }
+  .puerta.final img.mini { width: 26%; }
+}
+
+/* Actividad */
+.actividad { max-height: 340px; overflow: auto; }
+.actividad .ico { width: 30px; text-align: center; font-size: 1.1rem; flex: none; }
+.actividad .info small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+.actividad .hora { color: var(--gris); white-space: nowrap; flex: none; }
+
+/* Iconos en las casillas */
+.puerta .icono { position: relative; z-index: 2; display: block; width: 50%; margin-top: -8px; color: #fff; filter: drop-shadow(0 3px 6px rgba(0,0,0,.25)); }
+.puerta .icono svg { display: block; width: 100%; height: auto; }
+.puerta.final .icono { width: 30%; color: var(--oro); }
+.icono-prev { width: 48px; height: 48px; flex: none; color: var(--oro); }
+.icono-prev svg { width: 100%; height: 100%; }
+@media (max-width: 560px) { .puerta.final .icono { width: 24%; } }
+
+/* Panel de admin en móvil: que nada se salga por la derecha */
+.admin-cols > *, .row > label, .panel label { min-width: 0; }
+.panel input[type=file] { width: 100%; }
+@media (max-width: 560px) {
+  .admin { padding: 14px 10px; }
+  .panel { padding: 16px 14px; }
+  .crece { flex-basis: 140px; }
+}
+.lista { grid-template-columns: minmax(0, 1fr); }
+.lista li { min-width: 0; }

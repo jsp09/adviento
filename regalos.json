@@ -9,6 +9,7 @@
   "regalos": [
     {
       "id": "r01",
+      "icono": "chocolate",
       "numero": 1,
       "nombre": "Calendario de adviento de chocolate",
       "descripcion": "Una chocolatina para cada día de diciembre.",
@@ -38,6 +39,7 @@
     },
     {
       "id": "r02",
+      "icono": "guantes",
       "numero": 2,
       "nombre": "Guantes",
       "descripcion": "Para que este invierno no se te congelen las manos.",
@@ -62,6 +64,7 @@
     },
     {
       "id": "r04",
+      "icono": "vela",
       "numero": 4,
       "nombre": "Vela",
       "descripcion": "",
@@ -80,6 +83,7 @@
     },
     {
       "id": "r03",
+      "icono": "bolsa",
       "numero": 3,
       "nombre": "Bolsa de deporte",
       "descripcion": "",
@@ -99,6 +103,7 @@
     },
     {
       "id": "r24",
+      "icono": "reloj",
       "numero": 24,
       "nombre": "Regalo final",
       "descripcion": "",

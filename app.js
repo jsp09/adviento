@@ -1,7 +1,13 @@
 'use strict';
 
 /* ================== CONFIGURACIÓN ================== */
-const ADMIN_PIN = '2812'; // Cámbialo antes de publicar
+const ADMIN_PIN = '2812'; // Solo se usa si Supabase no está configurado
+
+// Supabase: pega aquí la URL del proyecto y la clave pública (publishable / anon).
+// Si se dejan vacías, la web funciona como antes, con regalos.json.
+const SUPABASE_URL = 'https://oclduxejpponufrddrza.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_ntp14XCBjABxN7fvOb3eeA_DtjIcWly';
+const sb = SUPABASE_URL && SUPABASE_KEY && window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 
 const LS = {
   datos: 'adviento3:datos',       // regalos (solo los escribe el admin)
@@ -36,9 +42,30 @@ async function sha(texto) {
   return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
+/* ================== ICONOS (siluetas propias, 64×64) ================== */
+const guante = `<rect x="7" y="15" width="5" height="17" rx="2.5"/><rect x="12.6" y="9.5" width="5" height="22" rx="2.5"/><rect x="18.2" y="8" width="5" height="23" rx="2.5"/><rect x="23.8" y="11.5" width="5" height="20" rx="2.5"/><rect x="7" y="24" width="21.8" height="20" rx="5"/><rect x="26.5" y="25" width="5" height="14" rx="2.5" transform="rotate(-32 29 32)"/><rect x="8" y="46.5" width="19.8" height="6" rx="1.5"/>`;
+const SVG_ICONOS = {
+  guantes: ['Guantes', `<g>${guante}</g><g transform="translate(64 0) scale(-1 1)">${guante}</g>`],
+  chocolate: ['Calendario de chocolate', `<rect x="7" y="7" width="50" height="50" rx="7" fill="none" stroke="currentColor" stroke-width="4.5"/><rect x="15" y="15" width="9" height="9" rx="2"/><rect x="27.5" y="15" width="9" height="9" rx="2"/><rect x="40" y="15" width="9" height="9" rx="2"/><rect x="15" y="27.5" width="9" height="9" rx="2"/><rect x="27.5" y="27.5" width="9" height="9" rx="2"/><rect x="40" y="27.5" width="9" height="9" rx="2"/><rect x="15" y="40" width="9" height="9" rx="2"/><rect x="27.5" y="40" width="9" height="9" rx="2"/><rect x="40" y="40" width="9" height="9" rx="2"/>`],
+  vela: ['Vela', `<path d="M32 5c4.5 6 7 9.5 7 13.5a7 7 0 0 1-14 0c0-4 2.5-7.5 7-13.5z"/><rect x="31" y="24" width="2" height="6" rx="1"/><rect x="13" y="30" width="38" height="5" rx="2"/><rect x="15" y="37" width="34" height="22" rx="6"/>`],
+  bolsa: ['Bolsa de deporte', `<path d="M22 27v-6a5 5 0 0 1 5-5h10a5 5 0 0 1 5 5v6" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round"/><rect x="6" y="25" width="52" height="28" rx="10"/><rect x="2" y="31" width="6" height="16" rx="3"/><rect x="56" y="31" width="6" height="16" rx="3"/>`],
+  reloj: ['Reloj', `<rect x="23" y="3" width="18" height="15" rx="3"/><rect x="23" y="46" width="18" height="15" rx="3"/><path fill-rule="evenodd" d="M32 15a17 17 0 1 0 0 34a17 17 0 1 0 0-34zM32 20a12 12 0 1 1 0 24a12 12 0 1 1 0-24z"/><rect x="30.8" y="23" width="2.4" height="10" rx="1.2"/><rect x="31" y="30.8" width="8" height="2.4" rx="1.2"/>`],
+  flores: ['Flores', `<rect x="30.5" y="28" width="3" height="31" rx="1.5"/><ellipse cx="41" cy="45" rx="8" ry="3.6" transform="rotate(-35 41 45)"/><ellipse cx="23" cy="50" rx="7" ry="3.2" transform="rotate(35 23 50)"/><circle cx="32" cy="12" r="7"/><circle cx="40.6" cy="18.3" r="7"/><circle cx="37.3" cy="28.3" r="7"/><circle cx="26.7" cy="28.3" r="7"/><circle cx="23.4" cy="18.3" r="7"/>`],
+  cena: ['Cena', `<path fill-rule="evenodd" d="M32 12a20 20 0 1 0 0 40a20 20 0 1 0 0-40zM32 19a13 13 0 1 1 0 26a13 13 0 1 1 0-26z"/><rect x="4" y="8" width="2.5" height="14" rx="1"/><rect x="8" y="8" width="2.5" height="14" rx="1"/><rect x="12" y="8" width="2.5" height="14" rx="1"/><rect x="4" y="18" width="10.5" height="6" rx="3"/><rect x="7.3" y="22" width="4" height="34" rx="2"/><path d="M55 8c3.5 2 5 8 5 16h-5z"/><rect x="55" y="22" width="4" height="34" rx="2"/>`],
+  taza: ['Desayuno / brunch', `<path d="M10 26h36v14a14 14 0 0 1-14 14h-8a14 14 0 0 1-14-14z"/><path d="M45 30h4a7 7 0 0 1 0 14h-5" fill="none" stroke="currentColor" stroke-width="4.5"/><rect x="6" y="56" width="44" height="4" rx="2"/><path d="M20 20c-3-4 3-6 0-10M29 20c-3-4 3-6 0-10M38 20c-3-4 3-6 0-10" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>`],
+  fondue: ['Fondue', `<rect x="8" y="27" width="48" height="6" rx="3"/><path d="M12 33h40v6a14 14 0 0 1-14 14h-12a14 14 0 0 1-14-14z"/><rect x="16" y="53" width="4" height="7" rx="2"/><rect x="44" y="53" width="4" height="7" rx="2"/><rect x="21" y="2" width="3" height="28" rx="1.5" transform="rotate(-22 22.5 16)"/><rect x="40" y="2" width="3" height="28" rx="1.5" transform="rotate(22 41.5 16)"/>`],
+  masaje: ['Masaje', `<path d="M32 6c5 6 7 11 7 16s-3 9-7 12c-4-3-7-7-7-12s2-10 7-16z"/><path d="M8 24c9 0 17 4 21 13-8 1-17-3-21-13zM56 24c-9 0-17 4-21 13 8 1 17-3 21-13z"/><rect x="8" y="44" width="48" height="5" rx="2.5"/><rect x="14" y="53" width="36" height="5" rx="2.5"/>`],
+  corazon: ['Corazón', `<path d="M32 56C11 41 6 31 6 22a13 13 0 0 1 26-5a13 13 0 0 1 26 5c0 9-5 19-26 34z"/>`],
+  regalo: ['Regalo', `<rect x="10" y="29" width="20.5" height="27" rx="2"/><rect x="33.5" y="29" width="20.5" height="27" rx="2"/><rect x="6" y="19" width="24.5" height="8" rx="2"/><rect x="33.5" y="19" width="24.5" height="8" rx="2"/><path d="M32 18c-4-8-14-10-14-4s8 4 14 4zM32 18c4-8 14-10 14-4s-8 4-14 4z"/>`],
+  estrella: ['Estrella', `<path d="M32 4l7.6 17.4 18.9 1.8-14.3 12.6 4.2 18.6L32 44.6 15.6 54.4l4.2-18.6L5.5 23.2l18.9-1.8z"/>`],
+};
+const svgIcono = k => (SVG_ICONOS[k] ? `<svg viewBox="0 0 64 64" fill="currentColor" aria-hidden="true">${SVG_ICONOS[k][1]}</svg>` : '');
+
 /* ================== ESTADO ================== */
 let datos = { config: {}, regalos: [] };
-let abiertos = new Set(JSON.parse(localStorage.getItem(LS.abiertos) || '[]'));
+let abiertos = new Set();
+let esAdmin = false;
+let ctx = null; // regalo que se está jugando, para registrar la actividad
 let editandoId = null;
 let fotoActual = '';
 
@@ -67,7 +94,12 @@ function estadoFase(r) {
   return r.fase.fecha > hoy() ? 'espera' : 'lista';
 }
 
+const claveAbiertos = () => LS.abiertos + (sb && esAdmin ? ':admin' : '');
+
 async function cargar() {
+  if (sb) return cargarSupabase();
+  esAdmin = !!sessionStorage.getItem(LS.admin);
+  abiertos = new Set(JSON.parse(localStorage.getItem(LS.abiertos) || '[]'));
   const local = localStorage.getItem(LS.datos);
   if (local) { try { datos = JSON.parse(local); return; } catch { /* sigue */ } }
   try {
@@ -77,11 +109,58 @@ async function cargar() {
   datos = datosIniciales();
 }
 
+async function cargarSupabase() {
+  const { data: { session } } = await sb.auth.getSession();
+  esAdmin = !!session;
+  const [aj, rg] = await Promise.all([
+    sb.from('ajustes').select('data').eq('id', 1).maybeSingle(),
+    sb.from('regalos').select('data'),
+  ]);
+  if (aj.error || rg.error) { console.error(aj.error || rg.error); toast('No se pudo conectar con la base de datos'); }
+  datos = { config: { ...datosIniciales().config, ...(aj.data?.data || {}) }, regalos: (rg.data || []).map(x => x.data) };
+  if (esAdmin) {
+    // Tú pruebas en local: lo que abras no cuenta como progreso de ella
+    abiertos = new Set(JSON.parse(localStorage.getItem(claveAbiertos()) || '[]'));
+  } else {
+    const ev = await sb.from('eventos').select('regalo_id,tipo').in('tipo', ['abierto', 'fase']);
+    abiertos = new Set((ev.data || []).map(e => (e.tipo === 'fase' ? e.regalo_id + ':fase' : e.regalo_id)));
+  }
+}
+
+// Actividad de ella (solo con Supabase y nunca cuando eres tú)
+function registrar(tipo, detalle = '', regaloId = ctx) {
+  if (!sb || esAdmin) return;
+  sb.from('eventos').insert({ regalo_id: regaloId || null, tipo, detalle: String(detalle).slice(0, 300) })
+    .then(({ error }) => error && console.error(error));
+}
+
+async function guardarRegalo(r) {
+  if (!sb) return guardar();
+  const { error } = await sb.from('regalos').upsert({ id: r.id, numero: r.numero, activo: !!r.activo, entregado: !!r.entregado, data: r, updated_at: new Date().toISOString() });
+  if (error) { toast('Error al guardar: ' + error.message); return false; }
+  return true;
+}
+async function borrarRegaloBD(id) {
+  if (!sb) return guardar();
+  const { error } = await sb.from('regalos').delete().eq('id', id);
+  if (error) { toast('Error al borrar: ' + error.message); return false; }
+  return true;
+}
+let ajustesT;
+function guardarAjustes() {
+  if (!sb) return guardar();
+  clearTimeout(ajustesT);
+  ajustesT = setTimeout(async () => {
+    const { error } = await sb.from('ajustes').upsert({ id: 1, data: cfg() });
+    if (error) toast('Error al guardar los ajustes: ' + error.message);
+  }, 600);
+}
+
 function guardar() {
   try { localStorage.setItem(LS.datos, JSON.stringify(datos)); return true; }
   catch { toast('No queda espacio en el navegador. Usa fotos más pequeñas o URLs.'); return false; }
 }
-const guardarAbiertos = () => localStorage.setItem(LS.abiertos, JSON.stringify([...abiertos]));
+const guardarAbiertos = () => { if (!sb || esAdmin) localStorage.setItem(claveAbiertos(), JSON.stringify([...abiertos])); };
 
 /* ================== CALENDARIO ================== */
 function render() {
@@ -117,10 +196,12 @@ function render() {
     else if (r?.activo && r.fecha) pie = `🔒 ${textoDias(diasHasta(r.fecha))}`;
     else pie = st === 'vacio' ? '' : '🔒 Pronto';
 
-    const clases = ['puerta', st, final ? 'final' : '', fase === 'lista' ? 'fase' : ''].join(' ');
+    const conIcono = !!(r?.icono && SVG_ICONOS[r.icono] && ver);
+    const conFoto = conIcono || !!(r?.foto && ver);
+    const clases = ['puerta', st, final ? 'final' : '', fase === 'lista' ? 'fase' : '', conFoto ? 'con-foto' : ''].join(' ');
     html += `<button class="${clases}" data-num="${i}" style="--i:${i}">
-      ${r?.foto && ver ? `<img src="${esc(r.foto)}" alt="" loading="lazy">` : ''}
       <span class="num">${i}</span>
+      ${conIcono ? `<span class="icono">${svgIcono(r.icono)}</span>` : conFoto ? `<img class="mini" src="${esc(r.foto)}" alt="" loading="lazy">` : ''}
       ${final ? `<span class="mes">${c.cumple ? fmtCorta(c.cumple) : 'el gran día'}</span>` : ''}
       ${ver ? `<span class="nombre">${esc(r.nombre)}</span>` : ''}
       <span class="pie">${pie}</span>
@@ -136,7 +217,7 @@ $('#calendario').addEventListener('click', e => {
   const r = datos.regalos.find(x => +x.numero === num);
   const st = estado(r);
   if (st === 'abierto') return mostrarRegalo(r);
-  if (st === 'disponible') return jugar(r.retos || [], () => desbloquear(r));
+  if (st === 'disponible') return jugar(r.retos || [], () => desbloquear(r), r.id);
   sacudir(b);
   if (num === total() && cfg().cumple) toast(`El gran día: ${fmtFecha(cfg().cumple)} 🎂`);
   else if (r?.activo && r.fecha) toast(`Paciencia: se abre el ${fmtFecha(r.fecha)}`);
@@ -157,15 +238,18 @@ function toast(txt) {
 }
 function sacudir(el) { el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); }
 const FALLOS = ['Nop. Prueba otra vez.', 'Casi… o no. Inténtalo de nuevo.', 'Frío, frío ❄️', 'Ese no es. ¡Ánimo!'];
-function fallo(zona, el) {
+function fallo(zona, el, detalle) {
   sacudir(el);
+  if (detalle !== undefined) registrar('fallo', detalle);
   const m = $('.msg', zona);
   if (m) m.textContent = FALLOS[Math.floor(Math.random() * FALLOS.length)];
 }
 
 /* ================== RETOS ================== */
-function jugar(retos, alTerminar) {
+function jugar(retos, alTerminar, regaloId, etiqueta = '') {
   let paso = 0;
+  ctx = regaloId;
+  registrar('inicio', etiqueta || `${retos.length} reto(s)`);
   const siguiente = () => {
     if (paso >= retos.length) return alTerminar();
     const reto = retos[paso];
@@ -173,6 +257,7 @@ function jugar(retos, alTerminar) {
       <div class="barra"><i style="width:${(paso / retos.length) * 100}%"></i></div>
       <div id="zonaReto"></div>`);
     JUEGOS[reto.tipo](reto, $('#zonaReto'), () => {
+      registrar('reto_ok', `${etiqueta ? etiqueta + ': ' : ''}reto ${paso + 1} (${reto.tipo})`);
       paso++;
       $('.barra i').style.width = `${(paso / retos.length) * 100}%`;
       toast('¡Correcto! 🎉');
@@ -197,7 +282,7 @@ const JUEGOS = {
       const v = norm($('input', f).value);
       const bien = validas.length ? validas.includes(v) : (reto.hashes || []).includes(await sha(v));
       if (bien) { $('button', f).disabled = true; ok(); }
-      else { fallo(el, f); $('input', f).select(); }
+      else { fallo(el, f, `Respuesta: ${$('input', f).value}`); $('input', f).select(); }
     };
   },
 
@@ -210,7 +295,7 @@ const JUEGOS = {
       const b = e.target.closest('button');
       if (!b || b.disabled) return;
       if (+b.dataset.i === +reto.correcta) { b.classList.add('ok'); $$('.opciones button', el).forEach(x => (x.disabled = true)); ok(); }
-      else { b.classList.add('mal'); b.disabled = true; fallo(el, b); }
+      else { b.classList.add('mal'); b.disabled = true; fallo(el, b, `Test: ${b.textContent}`); }
     };
   },
 
@@ -236,7 +321,7 @@ const JUEGOS = {
       usadas.push(+b.dataset.i); pintar();
       if (usadas.length < objetivo.length) return;
       if (norm(usadas.map(i => letras[i]).join('')) === norm(objetivo)) ok();
-      else { fallo(el, $('.respuesta-fichas', el)); setTimeout(() => { usadas = []; pintar(); }, 650); }
+      else { fallo(el, $('.respuesta-fichas', el), `Anagrama: ${usadas.map(i => letras[i]).join('')}`); setTimeout(() => { usadas = []; pintar(); }, 650); }
     };
     $('.respuesta-fichas', el).onclick = e => {
       const s = e.target.closest('[data-k]');
@@ -369,6 +454,7 @@ JUEGOS.queens = (reto, el, ok) => {
       reloj.classList.toggle('urgente', restante <= 10);
       if (restante > 0) return;
       parar(); reiniciar();
+      registrar('tiempo', `Queens: se acabó el tiempo (${seg} s)`);
       $('.q-aviso', el).innerHTML = '⏰ <b>¡Se acabó el tiempo!</b><br>Vuelta a empezar.';
       $('[data-start]', el).textContent = 'Reintentar';
       velo.hidden = false;
@@ -428,11 +514,12 @@ JUEGOS.wordle = (reto, el, ok) => {
     else if (k === '↵') {
       if (actual.length < L) { sacudir(grid); msg.textContent = `Faltan letras: son ${L}`; return; }
       const res = evaluarW(actual, obj);
-      filas.push({ palabra: actual, res }); actual = ''; msg.textContent = '';
+      filas.push({ palabra: actual, res }); registrar('intento', `Wordle: ${actual}`); actual = ''; msg.textContent = '';
       if (res.every(x => x === 'v')) { fin = true; pintar(); return setTimeout(ok, 600); }
       if (filas.length >= max) {
         fin = true; pintar(); sacudir(grid);
         msg.textContent = 'Se acabaron los intentos… ¡vuelta a empezar!';
+        registrar('fallo', 'Wordle: sin intentos');
         return setTimeout(() => { if (el.isConnected) { empezar(); msg.textContent = ''; } }, 2200);
       }
     } else if (actual.length < L) actual += k;
@@ -451,6 +538,7 @@ JUEGOS.wordle = (reto, el, ok) => {
 
 function desbloquear(r) {
   abiertos.add(r.id); guardarAbiertos();
+  registrar('abierto', r.nombre, r.id);
   render(); mostrarRegalo(r); confeti();
 }
 
@@ -486,8 +574,9 @@ function mostrarRegalo(r) {
   const btn = $('#btnFase');
   if (btn) btn.onclick = () => jugar(r.fase.retos || [], () => {
     abiertos.add(r.id + ':fase'); guardarAbiertos();
+    registrar('fase', 'Segunda fase desbloqueada', r.id);
     render(); mostrarRegalo(r); confeti();
-  });
+  }, r.id, 'Segunda fase');
 }
 
 /* ================== EXPEDIENTE DE LA CENA ================== */
@@ -556,7 +645,26 @@ function nieve() {
 }
 
 /* ================== ADMIN ================== */
-$('#btnAdmin').onclick = () => (sessionStorage.getItem(LS.admin) ? abrirAdmin() : pedirPin());
+$('#btnAdmin').onclick = () => (esAdmin ? abrirAdmin() : sb ? pedirLogin() : pedirPin());
+
+function pedirLogin() {
+  modal(`<h3>Acceso administrador</h3>
+    <form id="fLogin" style="display:grid;gap:8px">
+      <input type="email" placeholder="Email" autocomplete="username" required>
+      <input type="password" placeholder="Contraseña" autocomplete="current-password" required>
+      <button class="btn">Entrar</button>
+    </form><p class="msg"></p>`);
+  const f = $('#fLogin');
+  $('input', f).focus();
+  f.onsubmit = async e => {
+    e.preventDefault();
+    const [em, pw] = $$('input', f).map(i => i.value);
+    $('button', f).disabled = true;
+    const { error } = await sb.auth.signInWithPassword({ email: em, password: pw });
+    if (error) { $('button', f).disabled = false; fallo($('#modalContenido'), f); $('.msg', $('#modalContenido')).textContent = 'Email o contraseña incorrectos'; return; }
+    location.reload(); // recarga para traer también los regalos sin activar
+  };
+}
 
 function pedirPin() {
   modal(`<h3>Acceso administrador</h3>
@@ -566,7 +674,7 @@ function pedirPin() {
   $('input', f).focus();
   f.onsubmit = e => {
     e.preventDefault();
-    if ($('input', f).value === ADMIN_PIN) { sessionStorage.setItem(LS.admin, '1'); cerrarModal(); abrirAdmin(); }
+    if ($('input', f).value === ADMIN_PIN) { sessionStorage.setItem(LS.admin, '1'); esAdmin = true; cerrarModal(); abrirAdmin(); }
     else { fallo($('#modalContenido'), f); $('input', f).value = ''; }
   };
 }
@@ -584,18 +692,44 @@ function abrirAdmin() {
   $('#cfgPuzzleFilas').value = pz.filas || 3;
   $('#cfgPuzzleCols').value = pz.cols || 3;
   previewPuzzle();
+  $('#actividadBox').hidden = !sb;
+  $('#btnSalirSesion').hidden = !sb;
+  $('#btnRecargar').hidden = !!sb;
+  $('#btnExport').textContent = sb ? 'Descargar copia de seguridad' : 'Exportar regalos.json';
+  if (sb) renderActividad();
   renderLista();
   nuevoRegalo();
 }
 
+const ICONOS = { abierto: '🎁', fase: '✨', inicio: '👀', reto_ok: '✅', fallo: '❌', tiempo: '⏰', intento: '🔤' };
+async function renderActividad() {
+  const ul = $('#actividad');
+  ul.innerHTML = '<li><small>Cargando…</small></li>';
+  const { data, error } = await sb.from('eventos').select('*').order('created_at', { ascending: false }).limit(80);
+  if (error) { ul.innerHTML = `<li><small>Error: ${esc(error.message)}</small></li>`; return; }
+  const nombre = id => { const r = datos.regalos.find(x => x.id === id); return r ? `${r.numero}. ${r.nombre}` : ''; };
+  ul.innerHTML = data.length ? data.map(e => `<li><span class="ico">${ICONOS[e.tipo] || '•'}</span>
+    <div class="info"><b>${esc(nombre(e.regalo_id) || e.tipo)}</b><small>${esc(e.detalle || e.tipo)}</small></div>
+    <small class="hora">${new Date(e.created_at).toLocaleString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}</small></li>`).join('')
+    : '<li><small>Todavía no ha hecho nada.</small></li>';
+}
+$('#btnActividad').onclick = renderActividad;
+$('#btnBorrarProgreso').onclick = async () => {
+  if (!confirm('Se borra toda su actividad y se le vuelven a cerrar los regalos. ¿Seguro?')) return;
+  const { error } = await sb.from('eventos').delete().gt('id', 0);
+  if (error) return toast('Error: ' + error.message);
+  toast('Su progreso se ha borrado'); renderActividad();
+};
+$('#btnSalirSesion').onclick = async () => { await sb.auth.signOut(); location.reload(); };
+
 $('#btnSalirAdmin').onclick = () => { $('#admin').hidden = true; document.body.style.overflow = ''; render(); };
 
 // Ajustes
-$('#cfgTitulo').oninput = e => { cfg().titulo = e.target.value; guardar(); };
-$('#cfgSubtitulo').oninput = e => { cfg().subtitulo = e.target.value; guardar(); };
-$('#cfgTotal').onchange = e => { cfg().total = Math.min(Math.max(+e.target.value || 24, 1), 60); guardar(); opcionesNumero(); };
-$('#cfgCumple').onchange = e => { cfg().cumple = e.target.value; guardar(); };
-$('#cfgSpoilers').onchange = e => { cfg().spoilers = e.target.checked; guardar(); };
+$('#cfgTitulo').oninput = e => { cfg().titulo = e.target.value; guardarAjustes(); };
+$('#cfgSubtitulo').oninput = e => { cfg().subtitulo = e.target.value; guardarAjustes(); };
+$('#cfgTotal').onchange = e => { cfg().total = Math.min(Math.max(+e.target.value || 24, 1), 60); guardarAjustes(); opcionesNumero(); };
+$('#cfgCumple').onchange = e => { cfg().cumple = e.target.value; guardarAjustes(); };
+$('#cfgSpoilers').onchange = e => { cfg().spoilers = e.target.checked; guardarAjustes(); };
 $('#cfgFecha').onchange = e => {
   e.target.value ? sessionStorage.setItem(LS.fechaSim, e.target.value) : sessionStorage.removeItem(LS.fechaSim);
   toast(e.target.value ? 'Fecha simulada activada' : 'Usando la fecha real');
@@ -612,17 +746,17 @@ $('#cfgPuzzleFile').onchange = async e => {
   try {
     const foto = await comprimir(f, 1000);
     const img = new Image();
-    img.onload = () => { Object.assign(puzzleCfg(), { foto, ar: +(img.width / img.height).toFixed(3) }); guardar(); previewPuzzle(); toast('Foto del puzzle guardada'); };
+    img.onload = () => { Object.assign(puzzleCfg(), { foto, ar: +(img.width / img.height).toFixed(3) }); guardarAjustes(); previewPuzzle(); toast('Foto del puzzle guardada'); };
     img.src = foto;
   } catch { toast('No se pudo leer la imagen'); }
   e.target.value = '';
 };
-$('#cfgPuzzleFilas').onchange = e => { puzzleCfg().filas = Math.min(Math.max(+e.target.value || 3, 2), 6); guardar(); };
-$('#cfgPuzzleCols').onchange = e => { puzzleCfg().cols = Math.min(Math.max(+e.target.value || 3, 2), 6); guardar(); };
-$('#btnQuitarPuzzle').onclick = () => { delete puzzleCfg().foto; guardar(); previewPuzzle(); };
+$('#cfgPuzzleFilas').onchange = e => { puzzleCfg().filas = Math.min(Math.max(+e.target.value || 3, 2), 6); guardarAjustes(); };
+$('#cfgPuzzleCols').onchange = e => { puzzleCfg().cols = Math.min(Math.max(+e.target.value || 3, 2), 6); guardarAjustes(); };
+$('#btnQuitarPuzzle').onclick = () => { delete puzzleCfg().foto; guardarAjustes(); previewPuzzle(); };
 
 $('#btnResetAbiertos').onclick = () => {
-  if (!confirm('¿Volver a cerrar todos los regalos en este navegador?')) return;
+  if (!confirm(sb ? '¿Volver a cerrar los regalos que has abierto tú probando en este navegador? (No afecta a ella)' : '¿Volver a cerrar todos los regalos en este navegador?')) return;
   abiertos.clear(); guardarAbiertos(); renderLista(); toast('Regalos cerrados de nuevo');
 };
 
@@ -654,8 +788,14 @@ $('#fileImport').onchange = async e => {
     const d = JSON.parse(await file.text());
     if (!Array.isArray(d.regalos)) throw new Error();
     datos = { config: { ...cfg(), ...d.config }, regalos: d.regalos };
-    guardar(); abrirAdmin(); toast(`Importados ${d.regalos.length} regalos`);
-  } catch { toast('Ese archivo no es un regalos.json válido'); }
+    if (sb) {
+      const filas = d.regalos.map(r => ({ id: r.id, numero: r.numero, activo: !!r.activo, entregado: !!r.entregado, data: r }));
+      const a = await sb.from('regalos').upsert(filas);
+      const b = await sb.from('ajustes').upsert({ id: 1, data: datos.config });
+      if (a.error || b.error) throw new Error((a.error || b.error).message);
+    } else guardar();
+    abrirAdmin(); toast(`Importados ${d.regalos.length} regalos`);
+  } catch (err) { toast(err.message ? 'Error al importar: ' + err.message : 'Ese archivo no es un regalos.json válido'); }
   e.target.value = '';
 };
 
@@ -677,14 +817,15 @@ function renderLista() {
     </li>`).join('') : '<li><small>Aún no hay regalos.</small></li>';
 }
 
-$('#listaAdmin').onclick = e => {
+$('#listaAdmin').onclick = async e => {
   const ed = e.target.closest('[data-edit]'), del = e.target.closest('[data-del]');
   if (ed) editarRegalo(ed.dataset.edit);
   if (del) {
     const r = datos.regalos.find(x => x.id === del.dataset.del);
     if (!confirm(`¿Borrar "${r.nombre}"?`)) return;
+    if (!(await borrarRegaloBD(r.id))) return;
     datos.regalos = datos.regalos.filter(x => x.id !== r.id);
-    guardar();
+    if (!sb) guardar();
     if (editandoId === r.id) nuevoRegalo(); else renderLista();
   }
 };
@@ -711,6 +852,10 @@ function setFoto(src) {
   $('#fotoPrevWrap').hidden = !fotoActual;
   $('#fotoPreview').src = fotoActual;
 }
+form.icono.innerHTML = '<option value="">Sin icono (usa la foto en pequeño)</option>' +
+  Object.entries(SVG_ICONOS).map(([k, [nombre]]) => `<option value="${k}">${nombre}</option>`).join('');
+function previewIcono() { $('#iconoPrev').innerHTML = svgIcono(form.icono.value); }
+form.icono.onchange = previewIcono;
 function mostrarFase() { $('#faseBox').hidden = !form.tieneFase.checked; }
 form.tieneFase.onchange = mostrarFase;
 
@@ -720,6 +865,7 @@ function nuevoRegalo() {
   $('#formTitulo').textContent = 'Nuevo regalo';
   opcionesNumero(primerLibre());
   setFoto('');
+  previewIcono();
   $('#retos').innerHTML = ''; $('#retosFase').innerHTML = '';
   añadirReto($('#retos'));
   mostrarFase();
@@ -738,6 +884,8 @@ function editarRegalo(id) {
   form.fecha.value = r.fecha || '';
   form.entregado.checked = !!r.entregado;
   form.mensaje.value = r.mensaje || '';
+  form.icono.value = r.icono || '';
+  previewIcono();
   form.pistaSiguiente.value = r.pistaSiguiente || '';
   form.pistaCena.value = r.pistaCena?.texto || '';
   form.pieza.value = r.pistaCena?.pieza || '';
@@ -853,7 +1001,7 @@ function leerRetos(cont, prefijo) {
   });
 }
 
-form.onsubmit = e => {
+form.onsubmit = async e => {
   e.preventDefault();
   const numero = +form.numero.value;
   if (datos.regalos.some(r => r.id !== editandoId && +r.numero === numero)) return toast(`La casilla ${numero} ya tiene regalo`);
@@ -875,6 +1023,7 @@ form.onsubmit = e => {
     entregado: form.entregado.checked,
     foto: fotoActual,
     mensaje: form.mensaje.value.trim(),
+    icono: form.icono.value,
     pistaSiguiente: form.pistaSiguiente.value.trim(),
     pistaCena: (form.pistaCena.value.trim() || +form.pieza.value)
       ? { texto: form.pistaCena.value.trim(), pieza: +form.pieza.value || 0 } : null,
@@ -884,7 +1033,11 @@ form.onsubmit = e => {
   const previo = JSON.stringify(datos.regalos);
   const i = datos.regalos.findIndex(x => x.id === regalo.id);
   i >= 0 ? (datos.regalos[i] = regalo) : datos.regalos.push(regalo);
-  if (!guardar()) { datos.regalos = JSON.parse(previo); return; }
+  const btn = $('button[type=submit]', form);
+  btn.disabled = true;
+  const ok = await guardarRegalo(regalo);
+  btn.disabled = false;
+  if (!ok) { datos.regalos = JSON.parse(previo); return; }
   toast('Regalo guardado');
   editarRegalo(regalo.id);
 };
@@ -894,20 +1047,20 @@ function datosIniciales() {
   return {
     config: { titulo: 'El adviento más especial del año', subtitulo: 'Calendario de adviento particular pre-cumpleaños', total: 24, cumple: '2026-12-28', spoilers: false },
     regalos: [
-      { id: 'r01', numero: 1, nombre: 'Calendario de adviento de chocolate', descripcion: 'Una chocolatina para cada día de diciembre.',
+      { id: 'r01', icono: 'chocolate', numero: 1, nombre: 'Calendario de adviento de chocolate', descripcion: 'Una chocolatina para cada día de diciembre.',
         activo: true, fecha: '', entregado: true, foto: '', mensaje: '', retos: [],
         fase: { fecha: '2026-12-01', mensaje: '¡Ya puedes empezar a comértelo! Una ventanita al día, sin trampas 🍫',
           retos: [{ tipo: 'test', pregunta: '¿Cuántas ventanitas tiene un calendario de adviento clásico?', opciones: ['12', '24', '25', '31'], correcta: 1 }] } },
-      { id: 'r02', numero: 2, nombre: 'Guantes', descripcion: 'Para que este invierno no se te congelen las manos.',
+      { id: 'r02', icono: 'guantes', numero: 2, nombre: 'Guantes', descripcion: 'Para que este invierno no se te congelen las manos.',
         activo: true, fecha: '2026-11-24', entregado: false, foto: '', mensaje: 'Pídemelos, los tengo yo 😉',
         pistaCena: { texto: 'A partir de hoy irás recibiendo pistas sobre el restaurante de la cena. Guárdalas bien.', pieza: 0 },
         pistaSiguiente: 'Tu primer regalo tiene la respuesta escrita. ↑ arriba, ↓ abajo:\n↓5 · ↑2 · ↓8 · ↓4',
         retos: [{ tipo: 'queens', segundos: 40, tablero: 'PPPPPPPPOO\nPPBGGGGOOW\nPBBBGGOOWW\nPPBRGOOYYY\nPPRROOTTTY\nPPROOTTTTY\nPPOOYTTVTY\nPOOYYYVVVY\nOOKKYYYVYY\nOKKYYYYYYY' }], fase: null },
-      { id: 'r04', numero: 4, nombre: 'Vela', descripcion: '', activo: false, fecha: '', entregado: false, foto: '', mensaje: '',
+      { id: 'r04', icono: 'vela', numero: 4, nombre: 'Vela', descripcion: '', activo: false, fecha: '', entregado: false, foto: '', mensaje: '',
         retos: [{ tipo: 'memory', parejas: 6 }], fase: null },
-      { id: 'r03', numero: 3, nombre: 'Bolsa de deporte', descripcion: '', activo: false, fecha: '', entregado: false, foto: '', mensaje: '',
+      { id: 'r03', icono: 'bolsa', numero: 3, nombre: 'Bolsa de deporte', descripcion: '', activo: false, fecha: '', entregado: false, foto: '', mensaje: '',
         retos: [{ tipo: 'wordle', palabra: 'bolsa', intentos: 6 }], fase: null },
-      { id: 'r24', numero: 24, nombre: 'Regalo final', descripcion: '', activo: false, fecha: '2026-12-28', entregado: false, foto: '', mensaje: '',
+      { id: 'r24', icono: 'reloj', numero: 24, nombre: 'Regalo final', descripcion: '', activo: false, fecha: '2026-12-28', entregado: false, foto: '', mensaje: '',
         retos: [], fase: null },
     ],
   };
