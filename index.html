@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calendario de Adviento</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="nieve" aria-hidden="true"></div>
+
+  <header class="top">
+    <h1 id="titulo">Calendario de Adviento</h1>
+    <p id="subtitulo"></p>
+    <p id="progreso" class="progreso"></p>
+    <button id="btnExpediente" class="btn sec mini expediente" hidden></button>
+    <p id="avisoSim" class="aviso" hidden></p>
+    <button id="btnAdmin" class="btn sec mini">Admin</button>
+  </header>
+
+  <main id="calendario" class="grid"></main>
+
+  <!-- Modal (retos, regalo, PIN) -->
+  <div id="modal" class="modal" hidden>
+    <div class="modal-box" role="dialog" aria-modal="true">
+      <button class="cerrar" data-close aria-label="Cerrar">×</button>
+      <div id="modalContenido"></div>
+    </div>
+  </div>
+
+  <!-- Panel de administración -->
+  <section id="admin" class="admin" hidden>
+    <div class="admin-head">
+      <h2>Panel de administración</h2>
+      <button id="btnSalirAdmin" class="btn sec">Volver al calendario</button>
+    </div>
+
+    <div class="admin-cols">
+      <div class="panel">
+        <h3>Ajustes</h3>
+        <label>Título <input id="cfgTitulo"></label>
+        <label>Subtítulo <input id="cfgSubtitulo"></label>
+        <div class="row">
+          <label class="crece">Número de casillas <input type="number" id="cfgTotal" min="1" max="60"></label>
+          <label class="crece">Fecha del gran día (última casilla) <input type="date" id="cfgCumple"></label>
+        </div>
+        <label class="check"><input type="checkbox" id="cfgSpoilers"> Mostrar nombre y foto antes de desbloquear</label>
+        <fieldset class="reto">
+          <label>Foto del puzzle del expediente <input type="file" id="cfgPuzzleFile" accept="image/*"></label>
+          <div class="row">
+            <label class="crece">Filas <input type="number" id="cfgPuzzleFilas" min="2" max="6"></label>
+            <label class="crece">Columnas <input type="number" id="cfgPuzzleCols" min="2" max="6"></label>
+          </div>
+          <div class="foto-prev" id="puzzlePrevWrap" hidden>
+            <img id="puzzlePreview" alt="">
+            <button type="button" id="btnQuitarPuzzle" class="btn sec mini">Quitar</button>
+          </div>
+        </fieldset>
+        <label>Simular fecha (solo para probar, en este navegador)
+          <input type="date" id="cfgFecha">
+        </label>
+        <div class="row">
+          <button id="btnExport" class="btn">Exportar regalos.json</button>
+          <label class="btn sec">Importar JSON<input type="file" id="fileImport" accept=".json,application/json" hidden></label>
+        </div>
+        <button id="btnResetAbiertos" class="btn sec">Volver a cerrar todos los regalos (este navegador)</button>
+        <button id="btnRecargar" class="btn sec">Descartar cambios y cargar el regalos.json publicado</button>
+
+        <div class="lista-head">
+          <h3>Regalos</h3>
+          <button id="btnNuevo" class="btn mini">+ Nuevo</button>
+        </div>
+        <ul id="listaAdmin" class="lista"></ul>
+      </div>
+
+      <form id="formRegalo" class="panel" autocomplete="off">
+        <h3 id="formTitulo">Nuevo regalo</h3>
+        <div class="row">
+          <label style="flex:0 0 110px">Casilla nº <select name="numero"></select></label>
+          <label class="crece">Nombre <input name="nombre" required></label>
+        </div>
+        <label>Descripción <textarea name="descripcion" rows="3"></textarea></label>
+        <label class="check"><input type="checkbox" name="activo"> Activado (ella ya puede intentar abrirlo)</label>
+        <label>No antes de (opcional) <input type="date" name="fecha"></label>
+        <label class="check"><input type="checkbox" name="entregado"> Ya entregado: aparece abierto sin reto</label>
+        <div class="row">
+          <label class="crece">Subir foto <input type="file" id="fotoFile" accept="image/*"></label>
+          <label class="crece">o URL de la foto <input name="fotoUrl" placeholder="https://…"></label>
+        </div>
+        <div class="foto-prev" id="fotoPrevWrap" hidden>
+          <img id="fotoPreview" alt="">
+          <button type="button" id="btnQuitarFoto" class="btn sec mini">Quitar foto</button>
+        </div>
+        <label>Mensaje al abrirlo (opcional) <textarea name="mensaje" rows="2" placeholder="Una dedicatoria, un código, dónde está escondido…"></textarea></label>
+
+        <label>🔎 Pista del próximo regalo (la verá al abrir este) <textarea name="pistaSiguiente" rows="2"></textarea></label>
+        <div class="row">
+          <label class="crece">🕵️ Pista para el expediente de la cena <textarea name="pistaCena" rows="2"></textarea></label>
+          <label style="flex:0 0 120px">Pieza del puzzle nº <input type="number" name="pieza" min="0" placeholder="0 = ninguna"></label>
+        </div>
+
+        <h4>Retos para desbloquearlo <small>(se resuelven en orden)</small></h4>
+        <div id="retos"></div>
+        <button type="button" id="btnAddReto" class="btn sec mini">+ Añadir reto</button>
+
+        <h4><label class="check" style="margin:0"><input type="checkbox" name="tieneFase"> Segunda fase <small>(ej. abierto pero no se puede usar hasta una fecha)</small></label></h4>
+        <div id="faseBox" hidden>
+          <label>Se puede desbloquear desde <input type="date" name="faseFecha"></label>
+          <label>Mensaje al desbloquearla <textarea name="faseMensaje" rows="2"></textarea></label>
+          <div id="retosFase"></div>
+          <button type="button" id="btnAddRetoFase" class="btn sec mini">+ Añadir reto de la segunda fase</button>
+        </div>
+
+        <div class="row acciones">
+          <button type="submit" class="btn">Guardar regalo</button>
+          <button type="button" id="btnCancelar" class="btn sec">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <div id="toast" class="toast" hidden></div>
+  <script src="app.js"></script>
+</body>
+</html>
