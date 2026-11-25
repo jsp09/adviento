@@ -57,6 +57,16 @@ const SVG_ICONOS = {
   masaje: ['Masaje', `<path d="M32 6c5 6 7 11 7 16s-3 9-7 12c-4-3-7-7-7-12s2-10 7-16z"/><path d="M8 24c9 0 17 4 21 13-8 1-17-3-21-13zM56 24c-9 0-17 4-21 13 8 1 17-3 21-13z"/><rect x="8" y="44" width="48" height="5" rx="2.5"/><rect x="14" y="53" width="36" height="5" rx="2.5"/>`],
   corazon: ['Corazón', `<path d="M32 56C11 41 6 31 6 22a13 13 0 0 1 26-5a13 13 0 0 1 26 5c0 9-5 19-26 34z"/>`],
   regalo: ['Regalo', `<rect x="10" y="29" width="20.5" height="27" rx="2"/><rect x="33.5" y="29" width="20.5" height="27" rx="2"/><rect x="6" y="19" width="24.5" height="8" rx="2"/><rect x="33.5" y="19" width="24.5" height="8" rx="2"/><path d="M32 18c-4-8-14-10-14-4s8 4 14 4zM32 18c4-8 14-10 14-4s-8 4-14 4z"/>`],
+  rummikub: ['Rummikub', `<rect x="12" y="5" width="40" height="54" rx="7" fill="none" stroke="currentColor" stroke-width="4.5"/><path d="M38 16a15.5 15.5 0 1 0 0 31a30 30 0 0 1 0-31z"/><circle cx="40" cy="50" r="2.6"/><circle cx="24" cy="50" r="2.6"/>`],
+  queso: ['Queso', `<path d="M6 28L40 10l18 12z" opacity=".6"/><path fill-rule="evenodd" d="M6 30l52-8v30H6zM14 40a4 4 0 1 0 8 0a4 4 0 1 0-8 0zM30 34a3 3 0 1 0 6 0a3 3 0 1 0-6 0zM40 44a5 5 0 1 0 10 0a5 5 0 1 0-10 0zM24 47a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0-5 0z"/>`],
+  patinaje: ['Patinaje', `<path d="M14 6h17v19c0 4 3 6 8 7l10 2c5 1 7 4 7 8v4H14z"/><rect x="19" y="46" width="3.5" height="7"/><rect x="45" y="46" width="3.5" height="7"/><path d="M6 52h48c3 0 5-2 6-5l3 1c-1 5-5 9-10 9H6z"/>`],
+  bolos: ['Bolos', `<path d="M22 4c5 0 7 4 6 9-1 3-2 5-1 8 3 6 7 12 7 21 0 9-5 17-12 17S10 51 10 42c0-9 4-15 7-21 1-3 0-5-1-8-1-5 1-9 6-9z"/><path fill-rule="evenodd" d="M47 34a13 13 0 1 0 0 26a13 13 0 1 0 0-26zM42 40a2.4 2.4 0 1 0 4.8 0a2.4 2.4 0 1 0-4.8 0zM49 38a2.4 2.4 0 1 0 4.8 0a2.4 2.4 0 1 0-4.8 0zM48 45a2.4 2.4 0 1 0 4.8 0a2.4 2.4 0 1 0-4.8 0z"/>`],
+  gluhwein: ['Glühwein o crepe', `<path d="M14 24h30l-3 32H17z"/><path d="M43 30h4a7 7 0 0 1 0 14h-5" fill="none" stroke="currentColor" stroke-width="4.5"/><path d="M20 18c-3-4 3-6 0-10M29 18c-3-4 3-6 0-10M38 18c-3-4 3-6 0-10" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path fill-rule="evenodd" d="M44 16a8 8 0 1 0 0.01 0zM44 19a5 5 0 1 1-0.01 0z" opacity=".8"/>`],
+  tazagluh: ['Taza de Glühwein', `<path fill-rule="evenodd" d="M10 14h36v30a12 12 0 0 1-12 12H22a12 12 0 0 1-12-12zM28 22l2.6 5.6 6 .7-4.5 4.1 1.2 6-5.3-3-5.3 3 1.2-6-4.5-4.1 6-.7z"/><path d="M45 20h4a9 9 0 0 1 0 18h-4" fill="none" stroke="currentColor" stroke-width="4.5"/><rect x="6" y="57" width="44" height="4" rx="2"/>`],
+  salero: ['Salero y pimentero', `<path fill-rule="evenodd" d="M12 22a9 9 0 0 1 18 0v4H12zM17 16a1.6 1.6 0 1 0 3.2 0a1.6 1.6 0 1 0-3.2 0zM22.5 18a1.6 1.6 0 1 0 3.2 0a1.6 1.6 0 1 0-3.2 0zM17.5 21.5a1.6 1.6 0 1 0 3.2 0a1.6 1.6 0 1 0-3.2 0z"/><rect x="11" y="28" width="20" height="30" rx="5"/><path fill-rule="evenodd" d="M34 22a9 9 0 0 1 18 0v4H34zM41.4 18a1.6 1.6 0 1 0 3.2 0a1.6 1.6 0 1 0-3.2 0z"/><rect x="33" y="28" width="20" height="30" rx="5"/>`],
+  calcetin: ['Calcetines', `<rect x="20" y="4" width="26" height="11" rx="3"/><path d="M23 18h21v22c0 6-3 10-9 14l-10 6c-6 3-12 1-14-4-1-5 1-8 6-11l6-4z"/>`],
+  salchicha: ['Figura perro salchicha', `<path d="M42 12l10-6 4 13z"/><circle cx="58" cy="6" r="3.4"/><rect x="40" y="17" width="16" height="4" rx="2"/><rect x="10" y="30" width="38" height="14" rx="7"/><circle cx="48" cy="28" r="8"/><rect x="50" y="27" width="11" height="7" rx="3.5"/><path d="M44 26c-4 0-6 4-5 10 3 0 6-3 6-6z" opacity=".55"/><rect x="14" y="40" width="5" height="12" rx="2.5"/><rect x="38" y="40" width="5" height="12" rx="2.5"/><path d="M11 34c-4-1-7-4-8-8l3-1c1 3 3 5 6 5z"/>`],
+  pijama: ['Pijama', `<path fill-rule="evenodd" d="M22 6L6 14l6 13 6-3v34h28V24l6 3 6-13L42 6c-2 4-6 7-10 7s-8-3-10-7zM30 25a2.4 2.4 0 1 0 4.8 0a2.4 2.4 0 1 0-4.8 0zM30 35a2.4 2.4 0 1 0 4.8 0a2.4 2.4 0 1 0-4.8 0zM30 45a2.4 2.4 0 1 0 4.8 0a2.4 2.4 0 1 0-4.8 0z"/>`],
   estrella: ['Estrella', `<path d="M32 4l7.6 17.4 18.9 1.8-14.3 12.6 4.2 18.6L32 44.6 15.6 54.4l4.2-18.6L5.5 23.2l18.9-1.8z"/>`],
 };
 const svgIcono = k => (SVG_ICONOS[k] ? `<svg viewBox="0 0 64 64" fill="currentColor" aria-hidden="true">${SVG_ICONOS[k][1]}</svg>` : '');
@@ -813,11 +823,14 @@ $('#fileImport').onchange = async e => {
   try {
     const d = JSON.parse(await file.text());
     if (!Array.isArray(d.regalos)) throw new Error();
-    datos = { config: { ...cfg(), ...d.config }, regalos: d.regalos };
+    // Se añaden o actualizan los regalos del archivo; los que no vienen en él se quedan como están
+    const porId = new Map(datos.regalos.map(r => [r.id, r]));
+    d.regalos.forEach(r => porId.set(r.id, r));
+    datos = { config: { ...cfg(), ...(d.config || {}) }, regalos: [...porId.values()] };
     if (sb) {
       const filas = d.regalos.map(r => ({ id: r.id, numero: r.numero, activo: !!r.activo, entregado: !!r.entregado, data: r }));
       const a = await sb.from('regalos').upsert(filas);
-      const b = await sb.from('ajustes').upsert({ id: 1, data: datos.config });
+      const b = d.config ? await sb.from('ajustes').upsert({ id: 1, data: datos.config }) : { error: null };
       if (a.error || b.error) throw new Error((a.error || b.error).message);
     } else guardar();
     abrirAdmin(); toast(`Importados ${d.regalos.length} regalos`);
